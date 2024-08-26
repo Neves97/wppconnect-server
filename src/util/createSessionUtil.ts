@@ -54,10 +54,17 @@ export default class CreateSessionUtil {
 
       this.startChatWootClient(client);
 
+      const { timeout = 30000 } = req.body;
       if (req.serverOptions.customUserDataDir) {
         req.serverOptions.createOptions.puppeteerOptions = {
           userDataDir: req.serverOptions.customUserDataDir + session,
+          timeout: timeout 
         };
+        const { autoClose = 60000 } = req.body;
+        req.serverOptions.createOptions = {
+          ...req.serverOptions.createOptions,
+          autoClose: autoClose
+        }
       }
 
       const wppClient = await create(
